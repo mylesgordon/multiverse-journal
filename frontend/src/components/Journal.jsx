@@ -19,8 +19,6 @@ const Journal = () => {
                 method: "GET",
                 withCredentials: true,
                 headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 },
             })
