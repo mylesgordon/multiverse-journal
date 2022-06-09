@@ -10,6 +10,7 @@ root.render(
     <Auth0Provider
         domain="dev-oznje2my.us.auth0.com"
         clientId="hqmWjgbZDqRZWUEjcF0Yn26C03mTsR4A"
+        audience="multiverse-messages"
         redirectUri={window.location.origin}
     >
         <App />

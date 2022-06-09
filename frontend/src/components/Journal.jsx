@@ -4,9 +4,30 @@ import JournalList from "./JournalList";
 import JournalCreateEntry from "./JournalCreateEntry";
 
 const Journal = () => {
-    const { user } = useAuth0();
+    const { getAccessTokenSilently, user } = useAuth0();
+
+    const getAccessToken = async () =>
+        await getAccessTokenSilently({
+            audience: "multiverse-messages",
+            scope: "read:current_user",
+        });
 
     const [journalEntries, setJournalEntries] = React.useState([1, 2, 3, 4]);
+
+    React.useEffect(() => {
+        getAccessToken().then((token) =>
+            fetch("http://localhost:3001/api/v1/entry", {
+                method: "GET",
+                withCredentials: true,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            })
+                .then((res) => res.json())
+                .then((json) => console.log(json))
+                .catch((e) => console.error(e))
+        );
+    }, []);
 
     return (
         <React.Fragment>
