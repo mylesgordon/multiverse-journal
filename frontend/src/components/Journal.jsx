@@ -12,7 +12,7 @@ const Journal = () => {
             scope: "read:current_user",
         });
 
-    const [journalEntries, setJournalEntries] = React.useState([1, 2, 3, 4]);
+    const [journalEntries, setJournalEntries] = React.useState([]);
 
     React.useEffect(() => {
         getAccessToken().then((token) =>
@@ -24,7 +24,10 @@ const Journal = () => {
                 },
             })
                 .then((res) => res.json())
-                .then((json) => console.log(json))
+                .then((obj) => {
+                    console.log(obj);
+                    setJournalEntries(obj);
+                })
                 .catch((e) => console.error(e))
         );
     }, []);

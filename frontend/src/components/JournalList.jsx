@@ -10,15 +10,19 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 const JournalList = ({ journalEntries }) => {
     const [checked, setChecked] = React.useState({});
 
-    const handleToggle = (value) => {
+    const handleToggle = (id) => {
         const newChecked = { ...checked };
-        newChecked[value] = !newChecked[value];
+        newChecked[id] = !newChecked[id];
         setChecked(newChecked);
     };
 
     React.useEffect(() => {
-        console.log(checked);
-    }, [checked]);
+        const newChecked = {};
+        journalEntries.forEach((entry) => {
+            newChecked[entry.id] = false;
+        });
+        setChecked(newChecked);
+    }, [journalEntries]);
 
     return (
         <React.Fragment>
@@ -27,17 +31,27 @@ const JournalList = ({ journalEntries }) => {
             </IconButton>
 
             <List>
-                {journalEntries.map((value) => {
+                {journalEntries.map((entry) => {
                     return (
-                        <ListItem key={value}>
+                        <ListItem key={entry.id}>
                             <ListItemIcon>
-                                <IconButton onClick={() => handleToggle(value)}>
-                                    <Checkbox checked={checked[value]} />
+                                <IconButton
+                                    onClick={() => handleToggle(entry.id)}
+                                >
+                                    {/* TODO: hacky fix below */}
+                                    <Checkbox
+                                        checked={
+                                            typeof checked[entry.id] ===
+                                            "undefined"
+                                                ? false
+                                                : checked[entry.id]
+                                        }
+                                    />
                                 </IconButton>
                             </ListItemIcon>
                             {new Date().toISOString()}
                             <br />
-                            {value}
+                            {entry.text}
                         </ListItem>
                     );
                 })}

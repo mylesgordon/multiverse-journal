@@ -31,8 +31,8 @@ server.register(
         });
 
         instance.get("/entry", {
-            handler: (req, res) => {
-                res.send(Entry.findAll());
+            handler: async (req, res) => {
+                res.send(await Entry.findAll());
             },
             preValidation: instance.authenticate,
         });
@@ -41,7 +41,6 @@ server.register(
             handler: (req, res) => {
                 const { text } = req.body;
                 Entry.create({ text, user_id: "test123" });
-                return "";
             },
             preValidation: instance.authenticate,
         });
