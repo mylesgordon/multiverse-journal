@@ -19,17 +19,6 @@ server.register(require("@fastify/cors"), {
 
 server.register(
     (instance, _options, done) => {
-        instance.get("/external", {
-            handler: (req, res) => {
-                res.send(req.user);
-            },
-            preValidation: instance.authenticate,
-        });
-
-        instance.get("/", async (req, res) => {
-            return { hello: "world" };
-        });
-
         instance.get("/entry", {
             handler: async (req, res) => {
                 const { user_id } = req.query;
