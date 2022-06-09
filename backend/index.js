@@ -13,6 +13,10 @@ server.register(auth0, {
     audience: "multiverse-messages",
 });
 
+server.register(require("@fastify/cors"), {
+    origin: true,
+});
+
 server.register(
     (instance, _options, done) => {
         instance.get("/external", {
