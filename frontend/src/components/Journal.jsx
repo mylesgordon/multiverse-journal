@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import JournalList from "./JournalList";
+import JournalCreateEntry from "./JournalCreateEntry";
 
 const Journal = () => {
     const { user } = useAuth0();
@@ -9,6 +10,10 @@ const Journal = () => {
 
     return (
         <React.Fragment>
+            <JournalCreateEntry
+                journalEntries={journalEntries}
+                setJournalEntries={setJournalEntries}
+            />
             <JournalList journalEntries={journalEntries} />
         </React.Fragment>
     );
