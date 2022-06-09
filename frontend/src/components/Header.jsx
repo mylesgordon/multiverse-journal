@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -6,6 +8,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 const Header = () => {
+    const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
+
+    useEffect(() => {
+        console.log(isAuthenticated);
+    }, [isAuthenticated]);
+
     return (
         <AppBar position="static">
             <Toolbar>
@@ -25,7 +33,23 @@ const Header = () => {
 
                     <Typography>About</Typography>
                 </Box>
-                <Button variant="contained">Log In</Button>
+                {isAuthenticated ? (
+                    <Button
+                        variant="contained"
+                        onClick={() =>
+                            logout({ returnTo: window.location.origin })
+                        }
+                    >
+                        Log Out
+                    </Button>
+                ) : (
+                    <Button
+                        variant="contained"
+                        onClick={() => loginWithRedirect()}
+                    >
+                        Log In
+                    </Button>
+                )}
             </Toolbar>
         </AppBar>
     );
