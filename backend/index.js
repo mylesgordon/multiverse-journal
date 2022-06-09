@@ -28,10 +28,9 @@ server.register(
         });
 
         instance.post("/entry", {
-            handler: (req, res) => {
+            handler: async (req, res) => {
                 const { text, user_id } = req.body;
-                Entry.create({ text, user_id });
-                return "";
+                await Entry.create({ text, user_id });
             },
             preValidation: instance.authenticate,
         });
