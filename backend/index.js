@@ -32,15 +32,17 @@ server.register(
 
         instance.get("/entry", {
             handler: async (req, res) => {
-                res.send(await Entry.findAll());
+                const { user_id } = req.query;
+                res.send(await Entry.findAll({ where: { user_id } }));
             },
             preValidation: instance.authenticate,
         });
 
         instance.post("/entry", {
             handler: (req, res) => {
-                const { text } = req.body;
-                Entry.create({ text, user_id: "test123" });
+                const { text, user_id } = req.body;
+                Entry.create({ text, user_id });
+                return "";
             },
             preValidation: instance.authenticate,
         });

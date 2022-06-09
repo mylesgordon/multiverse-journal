@@ -49,7 +49,7 @@ const JournalList = ({ journalEntries }) => {
                                     />
                                 </IconButton>
                             </ListItemIcon>
-                            {new Date().toISOString()}
+                            {new Date(entry.createdAt).toLocaleString()}
                             <br />
                             {entry.text}
                         </ListItem>

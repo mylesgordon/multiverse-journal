@@ -5,6 +5,7 @@ import JournalCreateEntry from "./JournalCreateEntry";
 
 const Journal = () => {
     const { getAccessTokenSilently, user } = useAuth0();
+    const [journalEntries, setJournalEntries] = React.useState([]);
 
     const getAccessToken = async () =>
         await getAccessTokenSilently({
@@ -12,14 +13,14 @@ const Journal = () => {
             scope: "read:current_user",
         });
 
-    const [journalEntries, setJournalEntries] = React.useState([]);
-
-    React.useEffect(() => {
+    const getJournalEntries = () => {
         getAccessToken().then((token) =>
-            fetch("http://localhost:3001/api/v1/entry", {
+            fetch(`http://localhost:3001/api/v1/entry?user_id=${user.sub}`, {
                 method: "GET",
                 withCredentials: true,
                 headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
                     Authorization: "Bearer " + token,
                 },
             })
@@ -30,13 +31,17 @@ const Journal = () => {
                 })
                 .catch((e) => console.error(e))
         );
+    };
+
+    React.useEffect(() => {
+        getJournalEntries();
     }, []);
 
     return (
         <React.Fragment>
             <JournalCreateEntry
-                journalEntries={journalEntries}
-                setJournalEntries={setJournalEntries}
+                getAccessToken={getAccessToken}
+                getJournalEntries={getJournalEntries}
             />
             <JournalList journalEntries={journalEntries} />
         </React.Fragment>
