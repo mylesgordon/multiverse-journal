@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import AppBar from "@mui/material/AppBar";
@@ -9,10 +9,6 @@ import Typography from "@mui/material/Typography";
 
 const Header = () => {
     const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
-
-    useEffect(() => {
-        console.log(isAuthenticated);
-    }, [isAuthenticated]);
 
     return (
         <AppBar position="static">
