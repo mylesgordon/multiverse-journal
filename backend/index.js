@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const server = require("fastify")({ logger: true });
+const auth0 = require("fastify-auth0-verify");
 
 const sequelize = new Sequelize({
     dialect: "sqlite",
@@ -7,19 +8,44 @@ const sequelize = new Sequelize({
 });
 const Entry = require("./model")(sequelize, DataTypes);
 
-server.get("/entry", async (req, res) => {
-    return Entry.findAll();
+server.register(auth0, {
+    domain: "https://dev-oznje2my.us.auth0.com/",
+    audience: "multiverse-messages",
 });
 
-server.post("/entry", async (req, res) => {
-    const { text } = req.body;
-    Entry.create({ text, user_id: "test123" });
-    return "";
-});
+server.register(
+    (instance, _options, done) => {
+        instance.get("/external", {
+            handler: (req, res) => {
+                res.send(req.user);
+            },
+            preValidation: instance.authenticate,
+        });
 
-server.get("/", async (req, res) => {
-    return { hello: "world" };
-});
+        instance.get("/", async (req, res) => {
+            return { hello: "world" };
+        });
+
+        instance.get("/entry", {
+            handler: (req, res) => {
+                res.send(Entry.findAll());
+            },
+            preValidation: instance.authenticate,
+        });
+
+        instance.post("/entry", {
+            handler: (req, res) => {
+                const { text } = req.body;
+                Entry.create({ text, user_id: "test123" });
+                return "";
+            },
+            preValidation: instance.authenticate,
+        });
+
+        done();
+    },
+    { prefix: "/api/v1" }
+);
 
 const start = async () => {
     try {
@@ -28,7 +54,7 @@ const start = async () => {
 
         await server.listen(3001);
     } catch (err) {
-        fastify.log.error(err);
+        server.log.error(err);
         process.exit(1);
     }
 };
